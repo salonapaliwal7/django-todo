@@ -1,0 +1,46 @@
+<!-- todo_app/templates/tasks/list.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>To-Do List</title>
+</head>
+<h2>Add a New Task</h2>
+  <form method="post">
+    {% csrf_token %}
+    <input type="text" name="title" placeholder="Title" required>
+    <input type="date" name="due_date">
+    <select name="priority">
+      <option value="High">High</option>
+      <option value="Med">Medium</option>
+      <option value="Low">Low</option>
+    </select>
+    <select name="status">
+      <option value="Pending">Pending</option>
+      <option value="Done">Done</option>
+    </select>
+    <button type="submit">Add Task</button>
+  </form>
+
+  <hr>
+<body>
+  <h1>Your Tasks</h1>
+  <ul>
+    {% for task in tasks %}
+      <li>
+        {{ task.fields.title }} - {{ task.fields.status }}
+        {% if task.fields.status != "Done" %}
+          <form method="post" action="{% url 'mark_done' task.pk %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Mark as Done</button>
+          </form>
+        {% else %}
+      ✅
+        {% endif %}
+      </li>
+
+    {% empty %}
+      <li>No tasks yet.</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
